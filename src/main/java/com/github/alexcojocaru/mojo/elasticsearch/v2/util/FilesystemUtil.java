@@ -93,6 +93,11 @@ public final class FilesystemUtil
             // we do not have file permissions on windows
             return;
         }
+        if ( SystemUtils.IS_OS_LINUX)
+        {
+            // OpenSearch is packaged as a .tar.gz, and as such the permissions are preserved
+            return;
+        }
         if (VersionUtil.isEqualOrGreater_7_0_0(config.getClusterConfiguration().getVersion())) {
             // ES7 and above is packaged as a .tar.gz, and as such the permissions are preserved
             return;

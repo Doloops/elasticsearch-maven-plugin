@@ -73,6 +73,8 @@ public class ElasticsearchArtifact
 
         private String getArtifactId(String flavour, String version)
         {
+            if ( true )
+        		return "opensearch";
             if (VersionUtil.isBetween_6_3_0_and_7_10_x(version))
             {
                 if (StringUtils.isEmpty(flavour))
@@ -99,75 +101,61 @@ public class ElasticsearchArtifact
 
         private String getArtifactClassifier(String version)
         {
-            if (VersionUtil.isEqualOrGreater_7_0_0(version))
+            if (SystemUtils.IS_OS_WINDOWS)
             {
-                if (SystemUtils.IS_OS_WINDOWS)
-                {
-                    return "windows-x86_64";
-                }
+                return "windows-x64";
+            }
 
-                String arch = SystemUtils.OS_ARCH;
-                if (arch == null)
+            String arch = SystemUtils.OS_ARCH;
+            if (arch == null)
+            {
+                throw new IllegalStateException(
+                        "Cannot determine the OS arch, thus cannot build the artifact name to "
+                                + "download. As a workaround, you can use the 'downloadUrl' "
+                                + "plugin property.");
+            }
+
+            if (SystemUtils.IS_OS_MAC)
+            {
+                return "darwin-" + arch.toLowerCase();
+            }
+            else if (SystemUtils.IS_OS_LINUX)
+            {
+                if (arch.equalsIgnoreCase("amd64") || arch.equalsIgnoreCase("x86_64"))
+                {
+                    return "linux-x64";
+                }
+                else if (arch.equalsIgnoreCase("aarch64"))
+                {
+                    return "linux-aarch64";
+                }
+                else
                 {
                     throw new IllegalStateException(
-                            "Cannot determine the OS arch, thus cannot build the artifact name to "
-                                    + "download. As a workaround, you can use the 'downloadUrl' "
-                                    + "plugin property.");
-                }
-
-                if (SystemUtils.IS_OS_MAC)
-                {
-                    return "darwin-" + arch.toLowerCase();
-                }
-                else if (SystemUtils.IS_OS_LINUX)
-                {
-                    if (arch.equalsIgnoreCase("amd64") || arch.equalsIgnoreCase("x86_64"))
-                    {
-                        return "linux-x86_64";
-                    }
-                    else if (arch.equalsIgnoreCase("aarch64"))
-                    {
-                        return "linux-aarch64";
-                    }
-                    else
-                    {
-                        throw new IllegalStateException(
-                                "Unknown linux OS architecture name '" + arch + "'");
-                    }
-                }
-                else {
-                    throw new IllegalStateException("Unknown OS, cannot determine the Elasticsearch classifier.");
+                            "Unknown linux OS architecture name '" + arch + "'");
                 }
             }
-            else // No classifier for ES below 7.0.0
-            {
-                return null;
+            else {
+                throw new IllegalStateException("Unknown OS, cannot determine the Elasticsearch classifier.");
             }
         }
 
         private String getArtifactType(String version)
         {
-            if (VersionUtil.isEqualOrGreater_7_0_0(version))
-            {
-                if (SystemUtils.IS_OS_WINDOWS)
-                {
-                    return "zip";
-                }
-                else if (SystemUtils.IS_OS_MAC)
-                {
-                    return "tar.gz";
-                }
-                else if (SystemUtils.IS_OS_LINUX)
-                {
-                    return "tar.gz";
-                }
-                else {
-                    throw new IllegalStateException("Unknown OS, cannot determine the Elasticsearch classifier.");
-                }
-            }
-            else // Only a single artifact type below 7.0.0
+            if (SystemUtils.IS_OS_WINDOWS)
             {
                 return "zip";
+            }
+            else if (SystemUtils.IS_OS_MAC)
+            {
+                return "tar.gz";
+            }
+            else if (SystemUtils.IS_OS_LINUX)
+            {
+                return "tar.gz";
+            }
+            else {
+                throw new IllegalStateException("Unknown OS, cannot determine the Elasticsearch classifier.");
             }
         }
     }

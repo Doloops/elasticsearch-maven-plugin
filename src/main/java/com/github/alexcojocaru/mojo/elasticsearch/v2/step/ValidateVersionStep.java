@@ -26,7 +26,7 @@ public class ValidateVersionStep
                     "Please provide a valid Elasticsearch version."));
         }
         
-        if (VersionUtil.isUnder_5_0_0(version))
+        if (false && VersionUtil.isUnder_5_0_0(version))
         {
             throw new ElasticsearchSetupException(String.format(
                     "elasticsearch-maven-plugin supports only versions 5+ of Elasticsearch. You configured: %s.",
