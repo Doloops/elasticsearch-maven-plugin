@@ -122,7 +122,7 @@ public class ForkedInstance
             config.getSettings().forEach((key, value) -> cmd.addArgument("-E" + key + '=' + value));
         }
 
-        if (VersionUtil.isEqualOrGreater_8_0_0(config.getClusterConfiguration().getVersion()))
+        if (false && VersionUtil.isEqualOrGreater_8_0_0(config.getClusterConfiguration().getVersion()))
         {
             cmd.addArgument("-Expack.security.enabled=false", false);
         }
