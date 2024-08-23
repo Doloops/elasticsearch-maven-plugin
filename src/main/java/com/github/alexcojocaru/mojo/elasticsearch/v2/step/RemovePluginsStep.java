@@ -51,11 +51,11 @@ public class RemovePluginsStep
 
             if (VersionUtil.isEqualOrGreater_6_4_0(config.getClusterConfiguration().getVersion()))
             {
-                FilesystemUtil.setScriptPermission(config, "elasticsearch-cli");
+                FilesystemUtil.setScriptPermission(config, "opensearch-cli");
             }
-            FilesystemUtil.setScriptPermission(config, "elasticsearch-plugin");
+            FilesystemUtil.setScriptPermission(config, "opensearch-plugin");
 
-            CommandLine cmd = ProcessUtil.buildCommandLine("bin/elasticsearch-plugin")
+            CommandLine cmd = ProcessUtil.buildCommandLine("bin/opensearch-plugin")
                     .addArgument("list");
             
             List<String> output = ProcessUtil.executeScript(config, cmd, config.getEnvironmentVariables());
@@ -67,9 +67,11 @@ public class RemovePluginsStep
 
             for (String pluginName : pluginNames)
             {
+        	if (!pluginName.equals("opensearch-security"))
+        	    continue;
                 log.info(String.format("Removing plugin '%s'", pluginName));
                 
-                CommandLine removeCmd = ProcessUtil.buildCommandLine("bin/elasticsearch-plugin")
+                CommandLine removeCmd = ProcessUtil.buildCommandLine("bin/opensearch-plugin")
                         .addArgument("remove")
                         .addArgument(pluginName);
                 

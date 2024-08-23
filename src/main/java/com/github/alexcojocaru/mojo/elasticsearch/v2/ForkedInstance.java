@@ -35,7 +35,7 @@ public class ForkedInstance
     @Override
     public void run()
     {
-        FilesystemUtil.setScriptPermission(config, "elasticsearch");
+        FilesystemUtil.setScriptPermission(config, "opensearch");
 
         final ForkedElasticsearchProcessDestroyer processDestroyer = new ForkedElasticsearchProcessDestroyer(config);
         Runtime.getRuntime().addShutdownHook(new Thread(processDestroyer));
@@ -54,7 +54,7 @@ public class ForkedInstance
 
     protected CommandLine getStartScriptCommand()
     {
-        CommandLine cmd = ProcessUtil.buildCommandLine("bin/elasticsearch");
+        CommandLine cmd = ProcessUtil.buildCommandLine("bin/opensearch");
 
         // Write the PID to a file, to be used to shut down the instance.
         // The option ("-p") and the pid file name ("pid") must be provides as separate argument

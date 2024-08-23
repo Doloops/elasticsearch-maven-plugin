@@ -24,13 +24,16 @@ public class InstallPluginsStep
     @Override
     public void execute(InstanceConfiguration config)
     {
+	 if (true)
+	     return;
+	
         if (config.getClusterConfiguration().getPlugins().size() > 0)
         {
             if (VersionUtil.isEqualOrGreater_6_4_0(config.getClusterConfiguration().getVersion()))
             {
-                FilesystemUtil.setScriptPermission(config, "elasticsearch-cli");
+                FilesystemUtil.setScriptPermission(config, "opensearch-cli");
             }
-            FilesystemUtil.setScriptPermission(config, "elasticsearch-plugin");
+            FilesystemUtil.setScriptPermission(config, "opensearch-plugin");
         }
 
         Log log = config.getClusterConfiguration().getLog();
@@ -48,7 +51,7 @@ public class InstallPluginsStep
                 environment.put("ES_JAVA_OPTS", plugin.getEsJavaOpts());
             }
 
-            CommandLine cmd = ProcessUtil.buildCommandLine("bin/elasticsearch-plugin")
+            CommandLine cmd = ProcessUtil.buildCommandLine("bin/opensearch-plugin")
                     .addArgument("install")
                     .addArgument("--batch")
                     .addArgument(FilesystemUtil.fixFileUrl(plugin.getUri()), true);
